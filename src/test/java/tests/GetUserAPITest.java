@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import api.endpoints.UserEndpoints;
 import api.models.UserResponse;
+import api.specs.ResponseSpecs;
 import api.utils.ApiUtils;
 import io.restassured.response.Response;
 
@@ -22,13 +23,17 @@ public class GetUserAPITest {
 
     public void verifyGetUserAPI() {
 
-//        Response response =
-//                UserEndpoints.getUser(1);
     	Response response =
     	        UserEndpoints.getUser(1);
+    	response.then()
+        .spec(ResponseSpecs.successResponse());    // Use the successResponse() method from ResponseSpecs to validate the response
+    	
+    	SchemaUtils.validateSchema(
+    	        response,
+    	        "user-schema.json"); // Validate the response against the user-schema.json schema
 
     	UserResponse user =
-    	        response.as(UserResponse.class); // Deserialize the JSON response into a UserResponse object
+    	        response.as(UserResponse.class); // Deserialization the JSON response into a UserResponse object
     	
     	// Assert top-level fields
     	Assert.assertEquals(user.getId(), 1, "User ID mismatch");

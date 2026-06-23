@@ -55,4 +55,34 @@ public class UserEndpoints {
 
                 .get("/users/" + userId);
     }
+    
+    public static Response updateUser(
+            int userId,
+            UserPayload payload) {
+
+        return
+
+                given()
+
+                .spec(BaseSpec.getRequestSpec())
+
+                .body(payload)
+
+                .when()
+
+                .put("/users/" + userId);
+    }
+    public static Response deleteUser(
+            int userId) {
+
+        return
+
+                given()
+
+                .spec(BaseSpec.getRequestSpec())
+
+                .when()
+
+                .delete("/users/" + userId);
+    }
 }

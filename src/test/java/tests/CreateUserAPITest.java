@@ -6,42 +6,39 @@ import org.testng.annotations.Test;
 
 import api.endpoints.UserEndpoints;
 import api.models.UserPayload;
+import api.specs.ResponseSpecs;
 import api.utils.ApiUtils;
 import io.restassured.response.Response;
 
 public class CreateUserAPITest {
 
-    @BeforeClass
+	@BeforeClass
 
-    public void setup() {
+	public void setup() {
 
-        ApiUtils.setupBaseURI();
-    }
+		ApiUtils.setupBaseURI();
+	}
 
-    @Test
+	@Test
 
-    public void verifyCreateUserAPI() {
+	public void verifyCreateUserAPI() {
 
-        UserPayload payload =
-                new UserPayload();
+		UserPayload payload = new UserPayload();
 
-        payload.setName("Mridul");
+		payload.setName("Mridul");
 
-        payload.setJob("QA Engineer");
+		payload.setJob("QA Engineer");
 
-        Response response =
-                UserEndpoints.createUser(payload);
+		Response response = UserEndpoints.createUser(payload);// Call the createUser() method from UserEndpoints to send a POST request to create a new user with the specified payload
+		System.out.println(response.getBody().asPrettyString());
+		response.then().spec(ResponseSpecs.createResponse());  // Use the createResponse() method from ResponseSpecs to validate the response
 
-        System.out.println(
-                response.getBody().asPrettyString());
+		SchemaUtils.validateSchema(response, "create-user-schema.json"); // Validate the response against the create-user-schema.json schema
 
-        Assert.assertEquals(
-                response.getStatusCode(),
-                201);
 
-        Assert.assertEquals(
-                response.jsonPath()
-                        .getString("name"),
-                "Mridul");
-    }
+//        Assert.assertEquals(
+//                response.getStatusCode(), // Check the status code of the response
+//                201);
+		Assert.assertEquals(response.jsonPath().getString("name"), "Mridul");
+	}
 }
