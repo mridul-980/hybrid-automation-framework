@@ -15,15 +15,11 @@ public class UserEndpoints {
 
     public static Response getUser(int userId) {    // Method to get a user by ID using GET request
 
-        return
-
-                given()
-
-                .spec(BaseSpec.getRequestSpec())
-
-                .when()
-
-                .get("/users/" + userId);
+    	 return given()
+    	            .spec(BaseSpec.getRequestSpec())
+    	            .pathParam("id", userId)
+    	            .when()
+    	            .get("/users/{id}");      // Using path parameter for user ID
     }
     
     public static Response createUser(      // Method to create a new user using POST request
@@ -43,58 +39,56 @@ public class UserEndpoints {
     }
     
     public static Response getUserWithAuth(     // Method to get a user with authentication using GET request
-            int userId) {
+    	     int userId) {
 
-        return
-
-                given()
-
+        return given()
                 .spec(
                     api.auth.AuthSpec
                         .getAuthSpec())
-
+                .pathParam("id", userId)
                 .when()
-
-                .get("/users/" + userId);
+                .get("/users/{id}");         // Using path parameter for user ID
     }
     
     public static Response updateUser(          // Method to update a user using PUT request
-            int userId,
-            UserPayload payload) {
+    	     int userId,
+    	        UserPayload payload) {
 
-        return
-
-                given()
-
-                .spec(BaseSpec.getRequestSpec())
-
-                .body(payload)
-
-                .when()
-
-                .put("/users/" + userId);
+    	    return given()
+    	            .spec(BaseSpec.getRequestSpec())
+    	            .pathParam("id", userId)
+    	            .body(payload)
+    	            .when()
+    	            .put("/users/{id}");
     }
     public static Response deleteUser(        // Method to delete a user using DELETE request
-            int userId) {
-
-        return
-
-                given()
-
-                .spec(BaseSpec.getRequestSpec())
-
-                .when()
-
-                .delete("/users/" + userId);
-    }
-    public static Response patchUser(        // Method to partially update a user using PATCH request
-            int userId,
-            Map<String, Object> payload) {
+    	     int userId) {
 
         return given()
                 .spec(BaseSpec.getRequestSpec())
-                .body(payload)
+                .pathParam("id", userId)
                 .when()
-                .patch("/users/" + userId);
+                .delete("/users/{id}");
+    }
+    public static Response patchUser(        // Method to partially update a user using PATCH request
+    	     int userId,
+    	        Map<String, Object> payload) {
+
+    	    return given()
+    	            .spec(BaseSpec.getRequestSpec())
+    	            .pathParam("id", userId)
+    	            .body(payload)
+    	            .when()
+    	            .patch("/users/{id}");
+    }
+    
+    public static Response getUsersByPage(        // Method to get users by page using GET request, it is useful for pagination and retrieving a list of users
+            int page) {
+
+        return given()
+                .spec(BaseSpec.getRequestSpec())
+                .queryParam("page", page)
+                .when()
+                .get("/users");
     }
 }

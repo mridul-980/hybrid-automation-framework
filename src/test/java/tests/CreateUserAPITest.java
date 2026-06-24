@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import api.endpoints.UserEndpoints;
 import api.models.UserPayload;
-import api.specs.ResponseSpecs;
 import api.utils.ApiUtils;
 import io.restassured.response.Response;
 
