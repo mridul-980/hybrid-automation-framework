@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.testng.annotations.DataProvider;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import testdata.UserTestData;
 
 public class TestDataProvider {
@@ -12,7 +14,11 @@ public class TestDataProvider {
     
     public Object[][] getUserData() {
         List<UserTestData> users =
-                JsonDataReader.readUsers("users.json");   // Read the test data from the users.json file using the JsonDataReader utility class
+        		  JsonDataReader.readList(
+        	                "users.json",
+        	                new TypeReference<List<UserTestData>>() {}); // Read the test data from the users.json file using the JsonDataReader utility class and store it in a list of UserTestData objects
+        
+              //  JsonDataReader.readUsers("users.json");   // Read the test data from the users.json file using the JsonDataReader utility class
 
         Object[][] data =
                 new Object[users.size()][2];

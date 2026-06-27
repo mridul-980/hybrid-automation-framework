@@ -7,13 +7,14 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import testdata.UserTestData;
-
 public class JsonDataReader {
 
-    public static List<UserTestData> readUsers(String fileName) {
+    private static final ObjectMapper objectMapper =
+            new ObjectMapper();
 
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static <T> List<T> readList(
+            String fileName,
+            TypeReference<List<T>> typeReference) {
 
         try (InputStream inputStream =
                 JsonDataReader.class
@@ -21,18 +22,20 @@ public class JsonDataReader {
                         .getResourceAsStream("testdata/" + fileName)) {
 
             if (inputStream == null) {
-                throw new RuntimeException("File not found: " + fileName);
+
+                throw new RuntimeException(
+                        "File not found : " + fileName);
             }
 
             return objectMapper.readValue(
                     inputStream,
-                    new TypeReference<List<UserTestData>>() {
-                    });
+                    typeReference);
 
         } catch (IOException e) {
 
             throw new RuntimeException(
-                    "Unable to read JSON file: " + fileName,
+                    "Unable to read JSON file : "
+                            + fileName,
                     e);
         }
     }

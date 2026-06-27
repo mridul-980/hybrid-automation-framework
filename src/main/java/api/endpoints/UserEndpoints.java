@@ -1,11 +1,11 @@
 package api.endpoints;
 
-import static io.restassured.RestAssured.given;
-
 import java.util.Map;
 
+import api.auth.AuthSpec;
 import api.models.UserPayload;
-import api.specs.BaseSpec;
+import api.utils.ApiClient;
+import api.utils.ApiConstants;
 import io.restassured.response.Response;
 
 // This class defines the API endpoints related to user operations.
@@ -13,82 +13,59 @@ import io.restassured.response.Response;
 
 public class UserEndpoints {
 
-    public static Response getUser(int userId) {    // Method to get a user by ID using GET request
+	public static Response getUser(int userId) { // Method to get a user by ID using GET request
 
-    	 return given()
-    	            .spec(BaseSpec.getRequestSpec())
-    	            .pathParam("id", userId)
-    	            .when()
-    	            .get("/users/{id}");      // Using path parameter for user ID
-    }
-    
-    public static Response createUser(      // Method to create a new user using POST request
-            UserPayload payload) {
+		return ApiClient.getWithPathParam( // Using centralized ApiClient to handle GET request
+				ApiConstants.USER_BY_ID, "id", userId);
+	}
 
-        return
+	/*
+	 * return given() .spec(BaseSpec.getRequestSpec()) .pathParam("id", userId)
+	 * .when() .get(ApiConstants.USER_BY_ID); // .get("/users/{id}"); // Using path
+	 * parameter for user ID
+	 */
 
-                given()
+	public static Response createUser( // Method to create a new user using POST request
+			UserPayload payload) {
 
-                .spec(BaseSpec.getRequestSpec())
+		return ApiClient.post( // Using centralized ApiClient to handle POST request
+				ApiConstants.USERS, payload);
+	}
 
-                .body(payload)  // Payload is now passed as an object, and RestAssured will handle serialization.
+	public static Response getUserWithAuth( // Method to get a user with authentication using GET request
+			int userId) {
 
-                .when()
+		return ApiClient.getWithAuth( // Using centralized ApiClient to handle GET request with authentication
+				AuthSpec.getAuthSpec(), ApiConstants.USER_BY_ID, "id", userId);
+	}
 
-                .post("/users");
-    }
-    
-    public static Response getUserWithAuth(     // Method to get a user with authentication using GET request
-    	     int userId) {
+	public static Response updateUser( // Method to update a user using PUT request
+			int userId, UserPayload payload) {
 
-        return given()
-                .spec(
-                    api.auth.AuthSpec
-                        .getAuthSpec())
-                .pathParam("id", userId)
-                .when()
-                .get("/users/{id}");         // Using path parameter for user ID
-    }
-    
-    public static Response updateUser(          // Method to update a user using PUT request
-    	     int userId,
-    	        UserPayload payload) {
+		return ApiClient.put( // Using centralized ApiClient to handle PUT request
+				ApiConstants.USER_BY_ID, "id", userId, payload);
+	}
 
-    	    return given()
-    	            .spec(BaseSpec.getRequestSpec())
-    	            .pathParam("id", userId)
-    	            .body(payload)
-    	            .when()
-    	            .put("/users/{id}");
-    }
-    public static Response deleteUser(        // Method to delete a user using DELETE request
-    	     int userId) {
+	public static Response deleteUser( // Method to delete a user using DELETE request
+			int userId) {
 
-        return given()
-                .spec(BaseSpec.getRequestSpec())
-                .pathParam("id", userId)
-                .when()
-                .delete("/users/{id}");
-    }
-    public static Response patchUser(        // Method to partially update a user using PATCH request
-    	     int userId,
-    	        Map<String, Object> payload) {
+		return ApiClient.delete( // Using centralized ApiClient to handle DELETE request
+				ApiConstants.USER_BY_ID, "id", userId);
+	}
 
-    	    return given()
-    	            .spec(BaseSpec.getRequestSpec())
-    	            .pathParam("id", userId)
-    	            .body(payload)
-    	            .when()
-    	            .patch("/users/{id}");
-    }
-    
-    public static Response getUsersByPage(        // Method to get users by page using GET request, it is useful for pagination and retrieving a list of users
-            int page) {
+	public static Response patchUser( // Method to partially update a user using PATCH request
+			int userId, Map<String, Object> payload) {
 
-        return given()
-                .spec(BaseSpec.getRequestSpec())
-                .queryParam("page", page)
-                .when()
-                .get("/users");
-    }
+		return ApiClient.patch( // Using centralized ApiClient to handle PATCH request
+				ApiConstants.USER_BY_ID, "id", userId, payload);
+	}
+
+	public static Response getUsersByPage( // Method to get users by page using GET request, it is useful for pagination
+											// and retrieving a list of users
+			int page) {
+
+		return ApiClient.getWithQueryParam( // Using centralized ApiClient to handle GET request with query parameter for
+								// pagination
+				ApiConstants.USERS, "page", page);
+	}
 }
