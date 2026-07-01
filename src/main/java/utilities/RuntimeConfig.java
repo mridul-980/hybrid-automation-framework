@@ -1,5 +1,5 @@
 package utilities;
-
+import constants.ExecutionType;
 public class RuntimeConfig {
 
     public static String getBrowser() {
@@ -29,5 +29,35 @@ public class RuntimeConfig {
 
         return Boolean.parseBoolean(
                 ConfigReader.getProperty("headless"));
+    }
+    public static ExecutionType getExecutionType() {
+
+        String execution =
+                System.getProperty("execution");
+
+        if (execution != null &&
+                !execution.isEmpty()) {
+
+            return ExecutionType.valueOf(
+                    execution.toUpperCase());
+        }
+
+        return ExecutionType.valueOf(
+                ConfigReader
+                        .getProperty("execution")
+                        .toUpperCase());
+    }
+    public static String getRemoteUrl() {
+
+        String remoteUrl =
+                System.getProperty("remoteUrl");
+
+        if (remoteUrl != null &&
+                !remoteUrl.isEmpty()) {
+
+            return remoteUrl;
+        }
+
+        return ConfigReader.getProperty("remoteUrl");
     }
 }
