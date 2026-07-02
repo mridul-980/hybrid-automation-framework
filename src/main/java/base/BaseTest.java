@@ -2,6 +2,9 @@ package base;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+
 import drivers.BrowserManager;
 import factory.DriverFactory;
 import utilities.ConfigReader;
@@ -10,12 +13,14 @@ import utilities.RuntimeConfig;
 public class BaseTest {
 
 	@BeforeMethod
-	public void setup() {
+	@Parameters("browser")
+	public void setup(
+	        @Optional("chrome") String browser) {
 
 	    Log.info("Browser setup started");
 
 	    BrowserManager.initializeBrowser(
-	            RuntimeConfig.getBrowser(),
+	            browser,
 	            RuntimeConfig.isHeadless());
 
 	    DriverFactory.getDriver()
